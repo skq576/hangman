@@ -43,7 +43,7 @@ available_words = filter_words.get_available_words(word_length, dictionary)
 print(available_words[0])
 print(available_words[1])
 print(len(available_words))
-
+#get random
 word_index = random.randint(0, len(available_words))
 # selected_word = available_words[word_index]
 selected_word = "test"
