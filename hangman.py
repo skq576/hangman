@@ -3,6 +3,7 @@ import random
 import requests
 import json
 from os.path import dirname
+import filter_words
 
 print(dirname(__file__))
 
@@ -14,37 +15,51 @@ try:
 except:
     print("Please input valid number")
 
-guess_tries = input("How many guesses would you like(2-10)")
+guess_limit_str = input("How many guesses would you like(2-10)")
 try:
-    guess_tries = int(guess_tries)
-    if guess_tries < 2 or guess_tries > 10:
+    guess_limit = int(guess_limit_str)
+    if guess_limit < 2 or guess_tries > 10:
         1/0
 except:
     print("Please input valid number")
 
+#initialize word guess list
+guessed_word = []
+for x in range(word_length):
+    guessed_word.append(" ")
 dictionary = []
-url = "https://raw.githubusercontent.com/adambom/dictionary/master/dictionary.json"
-r = requests.get(url)
-response = r.json()
-# filename = "c:/Users/mark/pyworkspace/hangman/output.json"
+# url = "https://raw.githubusercontent.com/adambom/dictionary/master/dictionary.json"
+# r = requests.get(url)
+# response = r.json()
+filename = "c:/Users/mark/pyworkspace/hangman/output.json"
 # with open(filename, "w") as f:
 #     json.dump(response, f, indent=4)
+with open(filename, "r") as f:
+    response = json.load(f)
 dictionary = list(response.keys())
-# print(len(dictionary[0]))
+available_words = filter_words.get_available_words(word_length, dictionary)
 
-def filter_words(word):
-    if len(word) == word_length:
-        return True
-    else:
-        return False
-available_words = []
-filtered_dict = filter(filter_words, dictionary)
 
-for word in filtered_dict:
-    available_words.append(word)
 print(available_words[0])
 print(available_words[1])
 print(len(available_words))
+
+word_index = random.randint(0, len(available_words))
+# selected_word = available_words[word_index]
+selected_word = "test"
+guess_tries = 0
+while guess_tries < guess_limit:
+    guessed_word = filter_words.guess_letter(word_length, selected_word, guessed_word)
+    print("".join(guessed_word))
+    guess_tries = guess_tries + 1
+    if selected_word == "".join(guessed_word):
+        print("Congrats: You Did It!!!")
+        break
+
+
+
+
+    
 
 
 
